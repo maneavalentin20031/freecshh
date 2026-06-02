@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>FreeCash — Verdien Vandaag Nog</title>
+  <link rel="icon" href="data:,">
+  <meta name="description" content="Download FreeCash. Doe opdrachten. Direct uitbetaald." />
+  <link rel="preload" as="image" href="assets/freecash-logo.webp" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #060a08;
+      --card: #0f151c;
+      --card2: #131a23;
+      --border: #1e2730;
+      --green: #00e87a;
+      --green-dim: #00c469;
+      --green-glow: rgba(0,232,122,0.12);
+      --yellow: #ffc53d;
+      --text: #eaf0f7;
+      --muted: #637583;
+      --font: -apple-system,"Segoe UI",system-ui,sans-serif;
+    }
+    body {
+      background: var(--bg);
+      background-image: radial-gradient(ellipse 70% 50% at 50% 0%, rgba(0,232,122,0.13) 0%, transparent 70%), radial-gradient(ellipse 40% 30% at 80% 80%, rgba(0,232,122,0.07) 0%, transparent 60%);
+      color: var(--text);
+      font-family: var(--font);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      -webkit-font-smoothing: antialiased;
+    }
+    .page {
+      width: 100%;
+      max-width: 480px;
+      padding: 36px 18px 80px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    /* ── HERO ── */
+    .hero-logo {
+      width: 68px; height: 68px;
+      border-radius: 20px;
+      overflow: hidden;
+      margin-bottom: 20px;
+      box-shadow: 0 0 0 1px rgba(0,232,122,0.2), 0 0 40px rgba(0,232,122,0.1);
+    }
+    .hero-logo img { width: 68px; height: 68px; object-fit: cover; display: block; }
+
+    .live-badge {
+      display: inline-flex; align-items: center; gap: 7px;
+      background: rgba(0,232,122,0.08);
+      border: 1px solid rgba(0,232,122,0.25);
+      border-radius: 999px;
+      padding: 6px 15px;
+      font-size: 11px; font-weight: 700;
+      color: var(--green);
+      letter-spacing: 0.1em; text-transform: uppercase;
+      margin-bottom: 22px;
+    }
+    .live-dot {
+      width: 7px; height: 7px; border-radius: 50%;
+      background: var(--green);
+      animation: pulse 1.8s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%,100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.7); }
+    }
+
+    h1 {
+      font-size: clamp(30px, 8vw, 42px);
+      font-weight: 900;
+      text-align: center;
+      line-height: 1.12;
+      color: #fff;
+      letter-spacing: -0.03em;
+      margin-bottom: 14px;
+    }
+    h1 .g { color: var(--green); }
+
+    .subtext {
+      font-size: 15px;
+      color: var(--muted);
+      text-align: center;
+      line-height: 1.6;
+      margin-bottom: 10px;
+      max-width: 340px;
+    }
+
+    /* ── SOCIAL PROOF ── */
+    .proof-row {
+      display: flex; align-items: center; gap: 16px;
+      margin-bottom: 28px;
+    }
+    .proof-avatars {
+      display: flex;
+    }
+    .proof-avatars span {
+      width: 28px; height: 28px; border-radius: 50%;
+      border: 2px solid var(--bg);
+      background: var(--card2);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px; font-weight: 700; color: var(--green);
+      margin-left: -8px;
+    }
+    .proof-avatars span:first-child { margin-left: 0; }
+    .proof-text { font-size: 12px; color: var(--muted); line-height: 1.4; }
+    .proof-text strong { color: var(--text); font-weight: 600; }
+
+    /* ── CTA ── */
+    .cta-btn {
+      display: flex; align-items: center; justify-content: center; gap: 12px;
+      background: var(--green);
+      color: #000;
+      border-radius: 16px;
+      padding: 20px 24px;
+      text-decoration: none;
+      margin-bottom: 12px;
+      width: 100%;
+      -webkit-tap-highlight-color: transparent;
+      transition: background 0.15s, transform 0.1s;
+      box-sizing: border-box;
+    }
+    .cta-btn:active { transform: scale(0.98); background: var(--green-dim); }
+    .cta-apple { width: 26px; height: 26px; fill: #000; flex-shrink: 0; }
+    .cta-text { display: flex; flex-direction: column; align-items: flex-start; }
+    .cta-text strong { font-size: 17px; font-weight: 800; color: #000; line-height: 1.2; }
+    .cta-text span { font-size: 12px; color: rgba(0,0,0,0.5); margin-top: 2px; }
+
+    .trust-note {
+      font-size: 12px; color: var(--muted);
+      margin-bottom: 36px;
+      display: flex; align-items: center; justify-content: center; gap: 5px;
+      text-align: center; width: 100%;
+    }
+    .trust-note svg { width: 12px; height: 12px; stroke: var(--green); fill: none; flex-shrink: 0; }
+
+    /* ── PAYOUT TICKER ── */
+    .ticker-wrap {
+      width: 100%;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 14px 18px;
+      margin-bottom: 28px;
+      overflow: hidden;
+    }
+    .ticker-label {
+      font-size: 10px; font-weight: 700; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--muted);
+      margin-bottom: 10px;
+    }
+    .ticker-track {
+      display: flex; gap: 10px;
+      animation: ticker 18s linear infinite;
+      width: max-content;
+    }
+    @keyframes ticker {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+    .ticker-item {
+      display: flex; align-items: center; gap: 7px;
+      background: var(--card2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 6px 12px;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .ticker-flag { font-size: 14px; }
+    .ticker-name { font-size: 12px; color: var(--muted); }
+    .ticker-amount { font-size: 13px; font-weight: 700; color: var(--green); }
+
+    /* ── EARNINGS CARD ── */
+    .earn-card {
+      width: 100%;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 20px 18px;
+      margin-bottom: 10px;
+      position: relative;
+      overflow: hidden;
+    }
+    .earn-card::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0; height: 2px;
+      background: linear-gradient(90deg, var(--green), transparent);
+    }
+    .earn-card-top {
+      display: flex; align-items: center; gap: 12px;
+      margin-bottom: 16px;
+    }
+    .earn-icon {
+      width: 44px; height: 44px;
+      background: var(--green-glow);
+      border: 1px solid rgba(0,232,122,0.2);
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px; flex-shrink: 0;
+    }
+    .earn-title { font-weight: 700; font-size: 15px; color: #fff; margin-bottom: 2px; }
+    .earn-sub { font-size: 12px; color: var(--muted); }
+    .earn-rate-badge {
+      margin-left: auto;
+      background: rgba(255,197,61,0.12);
+      border: 1px solid rgba(255,197,61,0.25);
+      color: var(--yellow);
+      font-size: 11px; font-weight: 800;
+      padding: 5px 12px; border-radius: 999px;
+      letter-spacing: 0.04em;
+    }
+    .earn-bar-wrap { margin-bottom: 8px; }
+    .earn-bar-label {
+      display: flex; justify-content: space-between;
+      font-size: 11px; color: var(--muted); margin-bottom: 6px;
+    }
+    .earn-bar-label span:last-child { color: var(--green); font-weight: 600; }
+    .earn-bar-bg {
+      width: 100%; height: 6px;
+      background: var(--border);
+      border-radius: 999px; overflow: hidden;
+    }
+    .earn-bar-fill {
+      height: 100%; border-radius: 999px;
+      background: var(--green);
+      width: 73%;
+    }
+    .earn-spots {
+      font-size: 11px; color: var(--muted);
+      text-align: right; margin-top: 4px;
+    }
+    .earn-spots strong { color: #fff; }
+
+    /* ── ACTIVATION BOX ── */
+    .act-box {
+      width: 100%;
+      background: #120e04;
+      border: 1px solid #2e2106;
+      border-radius: 14px;
+      padding: 16px;
+      margin-bottom: 28px;
+      display: flex; gap: 12px; align-items: flex-start;
+      position: relative; overflow: hidden;
+    }
+    .act-corner {
+      position: absolute; top: 0; right: 0;
+      background: var(--yellow); color: #000;
+      font-size: 9px; font-weight: 800;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      padding: 4px 10px; border-bottom-left-radius: 10px;
+    }
+    .act-icon { font-size: 20px; flex-shrink: 0; margin-top: 2px; }
+    .act-title { font-size: 13px; font-weight: 800; color: #fff; margin-bottom: 5px; padding-right: 60px; }
+    .act-text { font-size: 12px; color: #8a7550; line-height: 1.6; }
+    .act-text strong { color: var(--yellow); }
+
+    /* ── STEPS ── */
+    .section-label {
+      font-size: 10px; font-weight: 700;
+      letter-spacing: 0.15em; text-transform: uppercase;
+      color: var(--muted); margin-bottom: 16px; align-self: center;
+    }
+    .steps { display: flex; flex-direction: column; gap: 10px; width: 100%; margin-bottom: 44px; }
+    .step {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 16px 18px;
+      display: flex; gap: 14px; align-items: flex-start;
+    }
+    .step-num {
+      width: 32px; height: 32px; border-radius: 10px;
+      background: var(--green-glow);
+      border: 1px solid rgba(0,232,122,0.18);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 13px; font-weight: 800; color: var(--green);
+      flex-shrink: 0;
+    }
+    .step-title { font-weight: 700; font-size: 14px; color: #fff; margin-bottom: 4px; }
+    .step-desc { font-size: 12.5px; color: var(--muted); line-height: 1.55; }
+    .step-desc .hi { color: var(--green); font-weight: 600; }
+    .step-tag {
+      display: inline-block; margin-top: 8px;
+      border: 1px solid rgba(0,232,122,0.2);
+      border-radius: 6px; padding: 3px 9px;
+      font-size: 10px; font-weight: 700;
+      color: rgba(0,232,122,0.5);
+      letter-spacing: 0.08em; text-transform: uppercase;
+    }
+
+    /* ── FOOTER ── */
+    footer { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+    .footer-links { display: flex; gap: 18px; flex-wrap: wrap; justify-content: center; }
+    .footer-links a { font-size: 11px; color: var(--muted); text-decoration: none; }
+    .footer-links a:hover { color: var(--text); }
+    .footer-copy { font-size: 11px; color: #3a4550; }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <!-- HERO -->
+  <div class="hero-logo">
+    <img src="assets/freecash-logo.webp" alt="FreeCash" fetchpriority="high" />
+  </div>
+
+  <div class="live-badge">
+    <span class="live-dot"></span>
+    Plekken raken vol
+  </div>
+
+  <h1>Zet Je Vrije Tijd<br>Om In <span class="g">Echt Geld</span></h1>
+  <p class="subtext">FreeCash betaalt je voor simpele opdrachten.<br>Geen ervaring nodig. Altijd opnemen.</p>
+
+  <!-- SOCIAL PROOF -->
+  <div class="proof-row">
+    <div class="proof-text" style="text-align:center;">
+      <strong>2,4 miljoen mensen</strong> verdienen al.<br>
+      Gem. uitbetaling binnen 24 uur.
+    </div>
+  </div>
+
+  <!-- CTA -->
+  <a href="https://gypsyniggaaffiliatelink.com" class="cta-btn" target="_blank" rel="noopener noreferrer">
+    <svg class="cta-apple" viewBox="0 0 24 24">
+      <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/>
+    </svg>
+    <div class="cta-text">
+      <strong>Download Gratis &amp; Begin Te Verdienen</strong>
+      <span>iOS &amp; Android — klaar in 60 seconden</span>
+    </div>
+  </a>
+  <div class="trust-note">
+    <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+    </svg>
+    Gratis lid worden · Geen creditcard · Opnemen via PayPal of bank
+  </div>
+
+  <!-- LIVE PAYOUT TICKER -->
+  <div class="ticker-wrap">
+    <div class="ticker-label">🟢 Live uitbetalingen op dit moment</div>
+    <div class="ticker-track" id="ticker">
+      <div class="ticker-item"><span class="ticker-flag">🇺🇸</span><span class="ticker-name">Jake T.</span><span class="ticker-amount">+€143.50</span></div>
+      <div class="ticker-item"><span class="ticker-flag">🇬🇧</span><span class="ticker-name">Sophie R.</span><span class="ticker-amount">+€178.00</span></div>
+      <div class="ticker-item"><span class="ticker-flag">🇩🇪</span><span class="ticker-name">Lukas M.</span><span class="ticker-amount">+€121.20</span></div>
+      <div class="ticker-item"><span class="ticker-flag">🇫🇷</span><span class="ticker-name">Camille D.</span><span class="ticker-amount">+€196.00</span></div>
+      <div class="ticker-item"><span class="ticker-flag">🇳🇱</span><span class="ticker-name">Daan V.</span><span class="ticker-amount">+€154.75</span></div>
+      <div class="ticker-item"><span class="ticker-flag">🇦🇺</span><span class="ticker-name">Mia H.</span><span class="ticker-amount">+€109.00</span></div>
+      <div class="ticker-item"><span class="ticker-flag">🇨🇦</span><span class="ticker-name">Liam B.</span><span class="ticker-amount">+€167.40</span></div>
+      <!-- duplicate for seamless loop -->
+      <div class="ticker-item"><span class="ticker-flag">🇺🇸</span><span class="ticker-name">Jake T.</span><span class="ticker-amount">+€143.50</span></div>
+      <div class="ticker-item"><span class="ticker-flag">🇬🇧</span><span class="ticker-name">Sophie R.</span><span class="ticker-amount">+€178.00</span></div>
+      <div class="ticker-item"><span class="ticker-flag">🇩🇪</span><span class="ticker-name">Lukas M.</span><span class="ticker-amount">+€121.20</span></div>
+      <div class="ticker-item"><span class="ticker-flag">🇫🇷</span><span class="ticker-name">Camille D.</span><span class="ticker-amount">+€196.00</span></div>
+      <div class="ticker-item"><span class="ticker-flag">🇳🇱</span><span class="ticker-name">Daan V.</span><span class="ticker-amount">+€154.75</span></div>
+      <div class="ticker-item"><span class="ticker-flag">🇦🇺</span><span class="ticker-name">Mia H.</span><span class="ticker-amount">+€109.00</span></div>
+      <div class="ticker-item"><span class="ticker-flag">🇨🇦</span><span class="ticker-name">Liam B.</span><span class="ticker-amount">+€167.40</span></div>
+    </div>
+  </div>
+
+  <!-- FEATURED OFFER CARD -->
+  <span class="section-label">Uitgelichte aanbieding</span>
+  <div class="earn-card" style="margin-bottom: 12px;">
+    <div class="earn-card-top">
+      <div class="earn-icon">💰</div>
+      <div>
+        <div class="earn-title">Doe Opdrachten op FreeCash</div>
+        <div class="earn-sub">Verdien echt geld — simpel &amp; snel</div>
+      </div>
+      <span class="earn-rate-badge">€149/HR</span>
+    </div>
+    <div class="earn-bar-wrap">
+      <div class="earn-bar-label">
+        <span>Plekken bezet vandaag</span>
+        <span>73% full</span>
+      </div>
+      <div class="earn-bar-bg"><div class="earn-bar-fill"></div></div>
+    </div>
+    <div class="earn-spots">Nog slechts <strong>27 plekken</strong> over tegen dit tarief</div>
+  </div>
+
+  <!-- ACTIVATION -->
+  <div class="act-box">
+    <span class="act-corner">⚠ Belangrijk</span>
+    <span class="act-icon">🔒</span>
+    <div>
+      <div class="act-title">Activatie vereist</div>
+      <div class="act-text">Nieuwe gebruikers: voltooi <strong>2 snelle taken</strong> om het volledige aanbod te ontgrendelen. Al gedaan? Ga direct naar het aanbod in je dashboard.</div>
+    </div>
+  </div>
+
+  <!-- HOW IT WORKS -->
+  <span class="section-label">Hoe het werkt</span>
+  <div class="steps">
+
+    <div class="step">
+      <div class="step-num">1</div>
+      <div>
+        <div class="step-title">Download de app — gratis</div>
+        <div class="step-desc">Installeer FreeCash &amp; ontvang direct <span class="hi">€10</span> bij aanmelding.</div>
+        <span class="step-tag">Gratis · Geen pas nodig</span>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">2</div>
+      <div>
+        <div class="step-title">Doe simpele opdrachten</div>
+        <div class="step-desc">Beantwoord enquêtes, probeer apps, voltooi aanbiedingen. Elke opdracht zet <span class="hi">echt geld</span> op je account.</div>
+        <span class="step-tag">Makkelijk te beginnen</span>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">3</div>
+      <div>
+        <div class="step-title">Uitbetaald worden wanneer je wilt</div>
+        <div class="step-desc">Opnemen via <span class="hi">PayPal, bankoverschrijving of cadeaubonnen.</span> De meeste binnen 24 uur verwerkt.</div>
+        <span class="step-tag">Snelle uitbetaling</span>
+      </div>
+    </div>
+
+  </div>
+
+  <footer>
+    <div class="footer-links">
+      <a href="#">Privacybeleid</a>
+      <a href="#">Gebruiksvoorwaarden</a>
+      <a href="#">Disclaimer</a>
+    </div>
+    <span class="footer-copy">© 2026 Alle rechten voorbehouden.</span>
+  </footer>
+
+</div>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  document.querySelectorAll("a").forEach(e => {
+    const h = e.getAttribute("href");
+    if (!h || h.includes("#")) return;
+    e.setAttribute("href", h + (h.includes("?") ? window.location.search.replace("?","&") : window.location.search));
+  });
+});
+</script>
+
+</body>
+</html>
